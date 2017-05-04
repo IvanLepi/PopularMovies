@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Pop Movies</string>
+
+    <string name="movie_thumb">Movie Thumbnail</string>
+    <string name="fetch_top_movies">Top Ranked Movies</string>
+    <string name="fetch_popular_movies">Most Popular Movies</string>
+    
+    <string name="movie_rating">%1$s/10</string>
+</resources>

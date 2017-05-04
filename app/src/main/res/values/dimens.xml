@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="detail_title_height">140dp</dimen>
+
+    <dimen name="side_padding">10dp</dimen>
+    <dimen name="detail_padding">30dp</dimen>
+    <dimen name="thumb_padding">20dp</dimen>
+
+    <dimen name="detail_title_size">40sp</dimen>
+    <dimen name="movie_score_text_size">20sp</dimen>
+    <dimen name="overview_text_size">18sp</dimen>
+    <dimen name="movie_year_text_size">40sp</dimen>
+</resources>
