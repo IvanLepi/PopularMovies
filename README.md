@@ -15,12 +15,12 @@
   - release date
 
 ### Mockup:
-<img src="https://github.com/IvanLepi/PopMovies/blob/master/screenshots/Phone_main_mockup.png?raw=true" width="300" height="533" />  <img src="https://github.com/IvanLepi/PopMovies/blob/master/screenshots/Phone_detail_with_settings_mockup.png?raw=true" width="300" height="533"/>
+<img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/Phone_detail_with_settings_mockup.png?raw=true" width="300" height="533" /><img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/Phone_main_mockup.png?raw=true" width="300" height="533"/>
 
 
 
 ### End Result:
-<img src="https://github.com/IvanLepi/PopMovies/blob/master/screenshots/details.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopMovies/blob/master/screenshots/scroll.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopMovies/blob/master/screenshots/sort.gif?raw=true"/>  
+<img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/details.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/scroll.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/sort.gif?raw=true"/>  
 
 ### TODO:
 - Allow users to view and play trailers ( either in the youtube app or a web browser).
