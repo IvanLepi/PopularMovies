@@ -15,7 +15,7 @@
   - release date
 
 ### Mockup:
-<img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/Phone_detail_with_settings_mockup.png?raw=true" width="300" height="533" /><img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/Phone_main_mockup.png?raw=true" width="300" height="533"/>
+<img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/Phone_detail_with_settings_mockup.png?raw=true" width="300" height="533" /> <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/Phone_main_mockup.png?raw=true" width="300" height="533"/>
 
 
 
