@@ -27,14 +27,17 @@ public class MovieItem implements Parcelable {
     public String rating;
     public String overview;
     public String posterUrl;
+    public String trailerUrl;
 
 
-    public MovieItem(String title,String year, String rating, String overview,String posterUrl){
+    public MovieItem(String title,String year, String rating,
+                     String overview,String posterUrl, String trailerUrl){
         this.title = title;
         this.year = year;
         this.rating = rating;
         this.overview = overview;
         this.posterUrl = posterUrl;
+        this.trailerUrl = trailerUrl;
 
     }
 
@@ -44,6 +47,7 @@ public class MovieItem implements Parcelable {
         rating = in.readString();
         overview = in.readString();
         posterUrl = in.readString();
+        trailerUrl = in.readString();
 
     }
 
@@ -59,6 +63,7 @@ public class MovieItem implements Parcelable {
         dest.writeString(rating);
         dest.writeString(overview);
         dest.writeString(posterUrl);
+        dest.writeString(trailerUrl);
 
     }
 }

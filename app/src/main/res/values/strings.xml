@@ -6,4 +6,5 @@
     <string name="fetch_popular_movies">Most Popular Movies</string>
     
     <string name="movie_rating">%1$s/10</string>
+    <string name="watch_trailer">Watch Trailer</string>
 </resources>

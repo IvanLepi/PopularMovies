@@ -14,10 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.dev.ivan.popularmovies.R;
 import com.dev.ivan.popularmovies.data.MovieItem;
 import com.dev.ivan.popularmovies.data.MovieItemClickListener;
-import com.dev.ivan.popularmovies.R;
-import com.dev.ivan.popularmovies.data.Utils;
 import com.dev.ivan.popularmovies.service.MovieService;
 
 import java.util.ArrayList;
@@ -118,9 +117,7 @@ public class MainActivity extends AppCompatActivity implements MovieItemClickLis
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String results = intent.getStringExtra(MovieService.MOVIE_RESULT_EXTRA);
-            // Generate movie items from received intent.
-            movieItems = Utils.generateMovieItems(results);
+            movieItems = intent.getParcelableArrayListExtra(MovieService.MOVIE_RESULT_EXTRA);
             // Refresh the RecyclerView with new data.
             updateView(movieItems);
         }
