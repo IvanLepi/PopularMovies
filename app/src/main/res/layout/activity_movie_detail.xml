@@ -65,6 +65,11 @@
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/movie_score_text_size"
                     />
+                <Button
+                    android:id="@+id/trailer_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/watch_trailer"/>
             </LinearLayout>
 
         </LinearLayout>
