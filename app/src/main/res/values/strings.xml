@@ -7,4 +7,8 @@
     
     <string name="movie_rating">%1$s/10</string>
     <string name="watch_trailer">Watch Trailer</string>
+
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">popularmovies.ivan.dev.com</string>
+    <string name="content_authority">com.dev.ivan.popularmovies</string>
 </resources>
