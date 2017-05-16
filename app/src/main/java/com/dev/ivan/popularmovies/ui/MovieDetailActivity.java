@@ -1,17 +1,18 @@
 package com.dev.ivan.popularmovies.ui;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dev.ivan.popularmovies.R;
-import com.dev.ivan.popularmovies.data.MovieItem;
+import com.dev.ivan.popularmovies.data.MovieContract;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -19,59 +20,79 @@ import com.squareup.picasso.Picasso;
  * @author Ivan Lepojevic
  */
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int DETAILS_LOADER = 0;
+    private Uri mUri;
+
+    ImageView imageView;
+    TextView titleView;
+    TextView dateView;
+    TextView scoreView;
+    TextView overView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        supportPostponeEnterTransition();
 
+        Intent intent = getIntent();
+        mUri = intent.getData();
 
+        getSupportLoaderManager().initLoader(DETAILS_LOADER,null,this);
 
-        Bundle extras = getIntent().getExtras();
-        final MovieItem movieItem = extras.getParcelable(MainActivity.EXTRA_MOVIE_ITEM);
-
-        ImageView imageView = (ImageView) findViewById(R.id.movie_detail_image_view);
-        TextView titleView = (TextView) findViewById(R.id.movie_detail_title);
-        TextView dateView = (TextView) findViewById(R.id.movie_detail_year);
-        TextView scoreView = (TextView) findViewById(R.id.movie_detail_score);
-        TextView overView = (TextView) findViewById(R.id.movie_detail_overview);
-
-        Button trailerButton = (Button) findViewById(R.id.trailer_button);
-        trailerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent watchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(movieItem.trailerUrl));
-                startActivity(watchIntent);
-            }
-        });
-
-        titleView.setText(movieItem.title);
-        dateView.setText(movieItem.year.substring(0,4));
-        scoreView.setText(String.format(getString(R.string.movie_rating),movieItem.rating));
-        overView.setText(movieItem.overview);
-
-        String imageUrl = movieItem.posterUrl;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String imageTransitionName = extras.getString(MainActivity.EXTRA_MOVIE_TRANSITION_NAME);
-            imageView.setTransitionName(imageTransitionName);
-        }
-
-        Picasso.with(this)
-                .load(imageUrl)
-                .noFade()
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        supportStartPostponedEnterTransition();}
-
-                    @Override
-                    public void onError() {
-                        supportStartPostponedEnterTransition();
-                    }
-                });
+        imageView = (ImageView) findViewById(R.id.movie_detail_image_view);
+        titleView = (TextView) findViewById(R.id.movie_detail_title);
+        dateView = (TextView) findViewById(R.id.movie_detail_year);
+        scoreView = (TextView) findViewById(R.id.movie_detail_score);
+        overView = (TextView) findViewById(R.id.movie_detail_overview);
+        //TODO Add trailer button functionality here.
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {MovieContract.MoviesEntry.COLUMN_ID,
+                MovieContract.MoviesEntry.COLUMN_TITLE,
+                MovieContract.MoviesEntry.COLUMN_YEAR,
+                MovieContract.MoviesEntry.COLUMN_RATING,
+                MovieContract.MoviesEntry.COLUMN_OVERVIEW,
+                MovieContract.MoviesEntry.COLUMN_POSTER_URL};
+        return new CursorLoader(this,
+                mUri,
+                projection,
+                null,
+                null,
+                null);
+    }
 
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(data != null && data.moveToFirst()){
+            titleView.setText(data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_TITLE)));
+            dateView.setText(data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_YEAR)).substring(0,4));
+            scoreView.setText(String.format(getString(R.string.movie_rating),
+                    data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_RATING))));
+            overView.setText(data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_OVERVIEW)));
+
+            String imageUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_POSTER_URL));
+
+            Picasso.with(this)
+                    .load(imageUrl)
+                    .noFade()
+                    .into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            supportStartPostponedEnterTransition();}
+
+                        @Override
+                        public void onError() {
+                            supportStartPostponedEnterTransition();
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
 }
