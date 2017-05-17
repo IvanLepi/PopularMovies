@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -37,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         bundleTop.putString("sort",MovieContract.MoviesEntry.COLUMN_ID + " ASC limit 20");
         bundlePop.putString("sort",MovieContract.MoviesEntry.COLUMN_ID + " DESC limit 20");
-        getSupportLoaderManager().initLoader(MOVIE_LOADER,bundleTop,this);
 
         mAdapter = new MovieAdapter(this,null,this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -45,7 +43,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
 
-        MovieSyncAdapter.syncImmediately(this);
+        MovieSyncAdapter.initializeSyncAdapter(this);
+
+        getSupportLoaderManager().initLoader(MOVIE_LOADER,bundleTop,this);
     }
 
     @Override
@@ -104,15 +104,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.e("onLoadFinished",Integer.toString(data.getCount()));
         mAdapter.swapCursor(data);
-
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-
 
 }
