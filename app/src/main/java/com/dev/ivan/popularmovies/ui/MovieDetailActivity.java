@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         mUri = intent.getData();
@@ -47,6 +49,15 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         scoreView = (TextView) findViewById(R.id.movie_detail_score);
         overView = (TextView) findViewById(R.id.movie_detail_overview);
         //TODO Add trailer button functionality here.
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home){
+            onBackPressed();
+        }
+        return true;
     }
 
     @Override

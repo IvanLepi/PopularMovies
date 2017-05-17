@@ -7,6 +7,7 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,16 +35,19 @@ import javax.net.ssl.HttpsURLConnection;
  */
 
 public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
+    // Our data will sync once per day.
+    // 60 seconds = 1 minute, times 720 = 24h
+    private static final int SYNC_INTERVAL = 60 * 720;
+    private static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
 
-    public MovieSyncAdapter(Context context,boolean autoInitialize){
+    public MovieSyncAdapter(Context context, boolean autoInitialize){
         super(context,autoInitialize);
     }
 
     @Override
     public void onPerformSync(Account account, Bundle bundle, String s, ContentProviderClient contentProviderClient, SyncResult syncResult) {
-        Log.d("MovieSyncAdapter","Starting Sync");
 
-        String API_KEY = "***PRIVATE***";
+        String API_KEY = "PRIVATE";
 
         String topMovies = "https://api.themoviedb.org/3/movie/top_rated?api_key=" + API_KEY + "&language=en-US&page=1";
         String popMovies = "https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY + "&language=en-US&page=1";
@@ -170,6 +174,18 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
         }
         return returnString;
     }
+    /**
+     * Helper method to schedule the sync adapter periodic execution
+     */
+    private static void configurePeriodicSync(Context context, int syncInterval, int syncFlextime) {
+        Account account = getSyncAccount(context);
+        String authority = context.getString(R.string.content_authority);
+        SyncRequest request = new SyncRequest.Builder()
+                .syncPeriodic(syncInterval, syncFlextime)
+                .setSyncAdapter(account, authority)
+                .setExtras(new Bundle()).build();
+        ContentResolver.requestSync(request);
+    }
 
     /**
      * Helper method to have the sync adapter sync immediately
@@ -217,8 +233,22 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
              * then call ContentResolver.setIsSyncable(account, AUTHORITY, 1)
              * here.
              */
+            onAccountCreated(newAccount,context);
         }
         return newAccount;
+    }
+
+    private static void onAccountCreated(Account newAccount, Context context) {
+        
+        MovieSyncAdapter.configurePeriodicSync(context,SYNC_INTERVAL, SYNC_FLEXTIME);
+
+        ContentResolver.setSyncAutomatically(newAccount,context.getString(R.string.content_authority),true);
+        
+        syncImmediately(context);
+    }
+
+    public static void initializeSyncAdapter(Context context){
+        getSyncAccount(context);
     }
 
 }
