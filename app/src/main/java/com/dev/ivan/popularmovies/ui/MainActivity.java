@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bundleTop.putString("sort",MovieContract.MoviesEntry.COLUMN_ID + " ASC limit 20");
-        bundlePop.putString("sort",MovieContract.MoviesEntry.COLUMN_ID + " DESC limit 20");
+        bundleTop.putString("sort",MovieContract.MoviesEntry.COLUMN_ID + " ASC limit 10");
+        bundlePop.putString("sort",MovieContract.MoviesEntry.COLUMN_ID + " DESC limit 10");
 
         mAdapter = new MovieAdapter(this,null,this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);

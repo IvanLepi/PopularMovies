@@ -9,6 +9,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -67,7 +69,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 MovieContract.MoviesEntry.COLUMN_YEAR,
                 MovieContract.MoviesEntry.COLUMN_RATING,
                 MovieContract.MoviesEntry.COLUMN_OVERVIEW,
-                MovieContract.MoviesEntry.COLUMN_POSTER_URL};
+                MovieContract.MoviesEntry.COLUMN_POSTER_URL,
+                MovieContract.MoviesEntry.COLUMN_TRAILER};
         return new CursorLoader(this,
                 mUri,
                 projection,
@@ -84,6 +87,17 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
             scoreView.setText(String.format(getString(R.string.movie_rating),
                     data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_RATING))));
             overView.setText(data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_OVERVIEW)));
+
+            final String trailerUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_TRAILER));
+
+            Button trailerButton = (Button) findViewById(R.id.trailer_button);
+            trailerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(trailerUrl));
+                    startActivity(intent);
+                }
+            });
 
             String imageUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_POSTER_URL));
 

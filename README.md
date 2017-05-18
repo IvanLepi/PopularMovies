@@ -23,7 +23,7 @@
 <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/details.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/scroll.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/sort.gif?raw=true"/>  
 
 ### TODO:
-- [ ] Allow users to view and play trailers ( either in the youtube app or a web browser).
+- [x] Allow users to view and play trailers ( either in the youtube app or a web browser).
 - [x] Use SQLite for data storage.
 - [x] Use Content Provider
 - [x] Use SyncAdapter
