@@ -46,7 +46,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle bundle, String s, ContentProviderClient contentProviderClient, SyncResult syncResult) {
-
+        Log.v("onPerformSync", "Sync started.");
         String API_KEY = "PRIVATE";
 
         String topMovies = "https://api.themoviedb.org/3/movie/top_rated?api_key=" + API_KEY + "&language=en-US&page=1";
@@ -58,7 +58,14 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
         // Parse out JsonString's and insert into the database.
         try {
             JSONArray topMoviesArray = new JSONArray(topMoviesJson);
+            for (int i = topMoviesArray.length(); i >= 10; i--) {
+                topMoviesArray.remove(i);
+            }
+
             JSONArray popMoviesArray = new JSONArray(popMoviesJson);
+            for (int i = popMoviesArray.length(); i >= 10; i++) {
+                popMoviesArray.remove(i);
+            }
             for (int i = 0; i < popMoviesArray.length(); i++) {
                 topMoviesArray.put(popMoviesArray.getJSONObject(i));
             }
@@ -73,6 +80,8 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 String rating;
                 String overview;
                 String posterUrl;
+                int movieId;
+                String trailerUrl = "No trailer.";
 
                 // Json Object representing a movie
                 JSONObject movieObject = topMoviesArray.getJSONObject(i);
@@ -82,6 +91,23 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 rating = movieObject.getString("vote_average");
                 overview = movieObject.getString("overview");
                 posterUrl = "http://image.tmdb.org/t/p/w185/" + movieObject.getString("poster_path");
+                movieId = movieObject.getInt("id");
+
+                String trailerUrlString = "https://api.themoviedb.org/3/movie/" + movieId +
+                        "/videos?api_key=" + API_KEY + "&language=en-US";
+                String trailersJson = fetchJsonString(trailerUrlString);
+                try {
+                    JSONArray array = new JSONArray(trailersJson);
+                    for (int y = 0; y < array.length(); i++) {
+                        JSONObject jsonObject = array.getJSONObject(y);
+                        if(jsonObject.getString("site").equals("YouTube")){
+                            trailerUrl = "https://www.youtube.com/watch?v=" + jsonObject.getString("key");
+                            break;
+                        }
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
 
                 ContentValues movieValues = new ContentValues();
 
@@ -90,6 +116,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 movieValues.put(MoviesEntry.COLUMN_RATING,rating);
                 movieValues.put(MoviesEntry.COLUMN_OVERVIEW,overview);
                 movieValues.put(MoviesEntry.COLUMN_POSTER_URL,posterUrl);
+                movieValues.put(MoviesEntry.COLUMN_TRAILER,trailerUrl);
 
                 cVValues.add(movieValues);
             }

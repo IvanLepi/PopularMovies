@@ -24,7 +24,8 @@ public class MovieDbHelper extends SQLiteOpenHelper {
             + MoviesEntry.COLUMN_YEAR + " TEXT NOT NULL, "
             + MoviesEntry.COLUMN_RATING + " TEXT NOT NULL, "
             + MoviesEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, "
-            + MoviesEntry.COLUMN_POSTER_URL + " TEXT NOT NULL);";
+            + MoviesEntry.COLUMN_POSTER_URL + " TEXT NOT NULL, "
+            + MoviesEntry.COLUMN_TRAILER + " TEXT NOT NULL);";
 
     public MovieDbHelper(Context context){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
