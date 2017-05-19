@@ -58,12 +58,12 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
         // Parse out JsonString's and insert into the database.
         try {
             JSONArray topMoviesArray = new JSONArray(topMoviesJson);
-            for (int i = topMoviesArray.length(); i >= 10; i--) {
+            for (int i = topMoviesArray.length(); i >= 8; i--) {
                 topMoviesArray.remove(i);
             }
 
             JSONArray popMoviesArray = new JSONArray(popMoviesJson);
-            for (int i = popMoviesArray.length(); i >= 10; i++) {
+            for (int i = popMoviesArray.length(); i >= 8; i--) {
                 popMoviesArray.remove(i);
             }
             for (int i = 0; i < popMoviesArray.length(); i++) {
@@ -72,7 +72,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
 
             //Vector that will have new information for our database
             Vector<ContentValues> cVValues = new Vector<>(topMoviesArray.length());
-
             for (int i = 0; i < topMoviesArray.length(); i++) {
                 // Values that are collected
                 String title;
@@ -82,6 +81,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 String posterUrl;
                 int movieId;
                 String trailerUrl = "No trailer.";
+                String reviewUrl = "No reviews.";
 
                 // Json Object representing a movie
                 JSONObject movieObject = topMoviesArray.getJSONObject(i);
@@ -98,7 +98,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 String trailersJson = fetchJsonString(trailerUrlString);
                 try {
                     JSONArray array = new JSONArray(trailersJson);
-                    for (int y = 0; y < array.length(); i++) {
+                    for (int y = 0; y < array.length(); y++) {
                         JSONObject jsonObject = array.getJSONObject(y);
                         if(jsonObject.getString("site").equals("YouTube")){
                             trailerUrl = "https://www.youtube.com/watch?v=" + jsonObject.getString("key");
@@ -109,6 +109,15 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                     e.printStackTrace();
                 }
 
+                String reviewUrlString = "https://api.themoviedb.org/3/movie/" + movieId +
+                        "/reviews?api_key=" + API_KEY + "&language=en-US";
+                String reviewJson = fetchJsonString(reviewUrlString);
+                if (!reviewJson.equals("[]")){
+                    JSONArray array = new JSONArray(reviewJson);
+                    JSONObject jsonObject = array.getJSONObject(0);
+                    reviewUrl = jsonObject.getString("url");
+                }
+
                 ContentValues movieValues = new ContentValues();
 
                 movieValues.put(MoviesEntry.COLUMN_TITLE,title);
@@ -117,6 +126,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 movieValues.put(MoviesEntry.COLUMN_OVERVIEW,overview);
                 movieValues.put(MoviesEntry.COLUMN_POSTER_URL,posterUrl);
                 movieValues.put(MoviesEntry.COLUMN_TRAILER,trailerUrl);
+                movieValues.put(MoviesEntry.COLUMN_REVIEW,reviewUrl);
 
                 cVValues.add(movieValues);
             }
@@ -132,7 +142,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.d("MovieSyncAdapter","Sync Complete." + inserted  + " inserted." + deleted + " deleted.");
 
         }catch (JSONException e){
-            Log.e("Error parsing Json.",e.getMessage());
+            Log.e("Error parsing Json.",e.getLocalizedMessage());
         }
     }
 
@@ -215,18 +225,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     /**
-     * Helper method to have the sync adapter sync immediately
-     * @param context The context used to access the account service
-     * */
-    public static void syncImmediately(Context context){
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED,true);
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        ContentResolver.requestSync(getSyncAccount(context),
-                context.getString(R.string.content_authority), bundle);
-    }
-
-    /**
      * Helper method to get the fake account to be used with SyncAdapter, or use new one
      * if hasn't been created yet. If we make a new account we call onAccountCreated method
      * so we can initialize things.
@@ -270,8 +268,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
         MovieSyncAdapter.configurePeriodicSync(context,SYNC_INTERVAL, SYNC_FLEXTIME);
 
         ContentResolver.setSyncAutomatically(newAccount,context.getString(R.string.content_authority),true);
-        
-        syncImmediately(context);
+
     }
 
     public static void initializeSyncAdapter(Context context){

@@ -11,4 +11,5 @@
     <!-- SyncAdapter related -->
     <string name="sync_account_type">popularmovies.ivan.dev.com</string>
     <string name="content_authority">com.dev.ivan.popularmovies</string>
+    <string name="read_review">Read Reviews</string>
 </resources>
