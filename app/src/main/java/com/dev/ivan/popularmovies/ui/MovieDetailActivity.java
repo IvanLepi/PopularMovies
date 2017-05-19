@@ -33,6 +33,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     TextView dateView;
     TextView scoreView;
     TextView overView;
+    Button trailerButton;
+    Button reviewButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         dateView = (TextView) findViewById(R.id.movie_detail_year);
         scoreView = (TextView) findViewById(R.id.movie_detail_score);
         overView = (TextView) findViewById(R.id.movie_detail_overview);
-        //TODO Add trailer button functionality here.
+        trailerButton = (Button) findViewById(R.id.trailer_button);
+        reviewButton = (Button) findViewById(R.id.review_button);
     }
 
     @Override
@@ -70,7 +73,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 MovieContract.MoviesEntry.COLUMN_RATING,
                 MovieContract.MoviesEntry.COLUMN_OVERVIEW,
                 MovieContract.MoviesEntry.COLUMN_POSTER_URL,
-                MovieContract.MoviesEntry.COLUMN_TRAILER};
+                MovieContract.MoviesEntry.COLUMN_TRAILER,
+                MovieContract.MoviesEntry.COLUMN_REVIEW};
         return new CursorLoader(this,
                 mUri,
                 projection,
@@ -89,8 +93,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
             overView.setText(data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_OVERVIEW)));
 
             final String trailerUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_TRAILER));
-
-            Button trailerButton = (Button) findViewById(R.id.trailer_button);
             trailerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -98,6 +100,19 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                     startActivity(intent);
                 }
             });
+
+            final String reviewUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_REVIEW));
+            if (!reviewUrl.equals("No reviews.")) {
+                reviewButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(reviewUrl));
+                        startActivity(intent);
+                    }
+                });
+            }else {
+                reviewButton.setVisibility(View.INVISIBLE);
+            }
 
             String imageUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_POSTER_URL));
 
