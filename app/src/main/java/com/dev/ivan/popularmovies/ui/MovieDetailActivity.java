@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dev.ivan.popularmovies.R;
-import com.dev.ivan.popularmovies.data.MovieContract;
+import com.dev.ivan.popularmovies.data.db.MovieContract;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -73,8 +73,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 MovieContract.MoviesEntry.COLUMN_RATING,
                 MovieContract.MoviesEntry.COLUMN_OVERVIEW,
                 MovieContract.MoviesEntry.COLUMN_POSTER_URL,
-                MovieContract.MoviesEntry.COLUMN_TRAILER,
-                MovieContract.MoviesEntry.COLUMN_REVIEW};
+                MovieContract.MoviesEntry.COLUMN_TRAILER};
         return new CursorLoader(this,
                 mUri,
                 projection,
@@ -101,7 +100,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 }
             });
 
-            final String reviewUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_REVIEW));
+            /*final String reviewUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_REVIEW));
             if (!reviewUrl.equals("No reviews.")) {
                 reviewButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -112,7 +111,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 });
             }else {
                 reviewButton.setVisibility(View.INVISIBLE);
-            }
+            }*/
 
             String imageUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_POSTER_URL));
 

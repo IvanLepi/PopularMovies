@@ -1,4 +1,4 @@
-package com.dev.ivan.popularmovies.data;
+package com.dev.ivan.popularmovies.data.db;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
