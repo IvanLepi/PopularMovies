@@ -11,26 +11,26 @@ import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 
 import com.dev.ivan.popularmovies.R;
 import com.dev.ivan.popularmovies.api.Movie;
 import com.dev.ivan.popularmovies.api.MoviesAPI;
 import com.dev.ivan.popularmovies.api.MoviesResponse;
+import com.dev.ivan.popularmovies.api.ReviewsResponse;
 import com.dev.ivan.popularmovies.api.TrailersResponse;
 import com.dev.ivan.popularmovies.data.db.MovieContract;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -70,63 +70,33 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void fetchMovies(){
-        Observable.zip(api.getTopRatedMovies(), api.getMostPopularMovies(), (moviesResponse, moviesResponse2) -> allMovies(moviesResponse,moviesResponse2))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Movie>>(){
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<Movie> movies) {
-                        moviesList.addAll(movies);
-                        fetchTrailers(moviesList);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d(LOG_TAG,e.getLocalizedMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d(LOG_TAG,"onComplete");
-                    }
-                });
-    }
-
-    private void fetchTrailers(ArrayList<Movie> moviesList) {
-        Observable.just(moviesList)
-                .flatMap(new Function<List<Movie>, ObservableSource<Movie>>(){
-                    @Override
-                    public ObservableSource<Movie> apply(List<Movie> movies) throws Exception {
-                        return Observable.fromIterable(movies); // return movies one by one
-                    }
-                })
-                .flatMap(new Function<Movie,ObservableSource<Pair<TrailersResponse,Movie>>>(){
-                    @Override
-                    public ObservableSource<Pair<TrailersResponse, Movie>> apply(Movie movie) throws Exception {
-                        return Observable.zip(api.getTrailer(movie.getId()),
+        Observable.zip(api.getTopRatedMovies(), api.getMostPopularMovies(),
+                (moviesResponse, moviesResponse2) -> allMovies(moviesResponse,moviesResponse2))
+                .flatMap(movies-> Observable.fromIterable(movies)) // return movies one by one
+                .flatMap(movie -> Observable.zip(api.getTrailer(movie.getId()),
+                                api.getReview(movie.getId()),
                                 Observable.just(movie),
-                                (trailers, movie1) -> new Pair<>(trailers, movie1));
-                    }
-                })
+                                (trailers,reviews, movie1) -> new ImmutableTriple<>(trailers,reviews, movie1)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Pair<TrailersResponse, Movie>>() {
+                .subscribe(new Observer<ImmutableTriple<TrailersResponse,ReviewsResponse, Movie>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Pair<TrailersResponse, Movie> pair) {
-                        TrailersResponse trailersResponse = pair.first;
+                    public void onNext(ImmutableTriple<TrailersResponse,ReviewsResponse, Movie> triple) {
+                        TrailersResponse trailersResponse = triple.getLeft();
                         String trailerUrl = trailersResponse.getResults().get(0).getKey();
-                        Movie movie = pair.second;
-
+                        Movie movie = triple.getRight();
+                        ReviewsResponse reviewsResponse = triple.getMiddle();
+                        String review;
+                        if(reviewsResponse.getTotalResults() != 0) {
+                            review = reviewsResponse.getResults().get(0).getUrl();
+                        }else{
+                            review = "No reviews.";
+                        }
                         ContentValues movieValues = new ContentValues();
                         movieValues.put(MovieContract.MoviesEntry.COLUMN_TITLE, movie.getTitle());
                         movieValues.put(MovieContract.MoviesEntry.COLUMN_YEAR, movie.getReleaseDate());
@@ -134,6 +104,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                         movieValues.put(MovieContract.MoviesEntry.COLUMN_OVERVIEW, movie.getOverview());
                         movieValues.put(MovieContract.MoviesEntry.COLUMN_POSTER_URL, "http://image.tmdb.org/t/p/w185/" + movie.getPosterPath());
                         movieValues.put(MovieContract.MoviesEntry.COLUMN_TRAILER, "https://www.youtube.com/watch?v=" + trailerUrl);
+                        movieValues.put(MovieContract.MoviesEntry.COLUMN_REVIEW, review);
                         cVValues.add(movieValues);
                     }
 
@@ -158,9 +129,11 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 });
     }
 
+
+
     private List<Movie> allMovies(MoviesResponse moviesResponse, MoviesResponse moviesResponse2) {
-        List<Movie> topMovies = moviesResponse.getResults().subList(0,10);
-        List<Movie> popMovies = moviesResponse2.getResults().subList(0,10);
+        List<Movie> topMovies = moviesResponse.getResults().subList(0,8);  // themoviedb.org allows
+        List<Movie> popMovies = moviesResponse2.getResults().subList(0,8); // 40 requests / 10 sec.
         List<Movie> allMovies = new ArrayList<>();
         allMovies.addAll(topMovies);
         allMovies.addAll(popMovies);

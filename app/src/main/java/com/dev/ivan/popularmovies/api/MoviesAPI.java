@@ -18,4 +18,7 @@ public interface MoviesAPI {
     @GET("{id}/videos?api_key=**PRIVATE**")
     Observable<TrailersResponse> getTrailer(@Path("id") int movId);
 
+    @GET("{id}/reviews?api_key=**PRIVATE**")
+    Observable<ReviewsResponse> getReview(@Path("id") int movId);
+
 }
