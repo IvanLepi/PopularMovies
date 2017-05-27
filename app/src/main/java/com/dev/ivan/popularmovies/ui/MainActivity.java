@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.dev.ivan.popularmovies.R;
-import com.dev.ivan.popularmovies.data.MovieContract;
+import com.dev.ivan.popularmovies.data.db.MovieContract;
 import com.dev.ivan.popularmovies.sync.MovieSyncAdapter;
 
 /**

@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dev.ivan.popularmovies.R;
-import com.dev.ivan.popularmovies.data.MovieContract;
+import com.dev.ivan.popularmovies.data.db.MovieContract;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -93,22 +93,16 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
             overView.setText(data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_OVERVIEW)));
 
             final String trailerUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_TRAILER));
-            trailerButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(trailerUrl));
-                    startActivity(intent);
-                }
+            trailerButton.setOnClickListener(view -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(trailerUrl));
+                startActivity(intent);
             });
 
             final String reviewUrl = data.getString(data.getColumnIndex(MovieContract.MoviesEntry.COLUMN_REVIEW));
             if (!reviewUrl.equals("No reviews.")) {
-                reviewButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(reviewUrl));
-                        startActivity(intent);
-                    }
+                reviewButton.setOnClickListener(view -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(reviewUrl));
+                    startActivity(intent);
                 });
             }else {
                 reviewButton.setVisibility(View.INVISIBLE);

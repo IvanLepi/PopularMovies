@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.dev.ivan.popularmovies.R;
-import com.dev.ivan.popularmovies.data.MovieContract;
+import com.dev.ivan.popularmovies.data.db.MovieContract;
 import com.squareup.picasso.Picasso;
 
 /**
