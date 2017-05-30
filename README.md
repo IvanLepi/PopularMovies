@@ -22,7 +22,7 @@
 
 
 ### End Result:
-<img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/details.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/scroll.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/sort.gif?raw=true"/>  
+<img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/details.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/sort.gif?raw=true"/>
 
 ### TODO:
 - [ ] Allow users to mark a movie as a favorite in the details view by tapping a button(star). This is for a local movies collection that you will maintain and does not require an API request*.
