@@ -22,7 +22,7 @@
 
 
 ### End Result:
-<img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/details.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/scroll.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/sort.gif?raw=true"/>  
+<img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/details.gif?raw=true"/>  <img src="https://github.com/IvanLepi/PopularMovies/blob/master/screenshots/sort.gif?raw=true"/>
 
 ### Libraries used:
 [RxJava2][1], [RxAndroid][3], [Retrofit2][2], [Retrolambda][4], [Picasso][5].

@@ -17,6 +17,8 @@ import com.dev.ivan.popularmovies.R;
 import com.dev.ivan.popularmovies.data.db.MovieContract;
 import com.dev.ivan.popularmovies.sync.MovieSyncAdapter;
 
+import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
+
 /**
  * @author Ivan Lepojevic
  */
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this,2);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new FadeInUpAnimator());
         recyclerView.setAdapter(mAdapter);
 
         MovieSyncAdapter.initializeSyncAdapter(this);
