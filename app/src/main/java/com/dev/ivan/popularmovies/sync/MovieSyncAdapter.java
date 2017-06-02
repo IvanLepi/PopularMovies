@@ -63,20 +63,30 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
-
+        // Initiate an object of NewsAPI interface.
         api = retrofit.create(MoviesAPI.class);
-
+        // Perform a sync
         fetchMovies();
     }
 
+    /**
+     * Helper method that does our networking logic using RxJava.
+     */
     private void fetchMovies(){
+        // Using the zip operator we make two consecutive calls
+        // and return a combined List<Movie>
         Observable.zip(api.getTopRatedMovies(), api.getMostPopularMovies(),
-                (moviesResponse, moviesResponse2) -> allMovies(moviesResponse,moviesResponse2))
-                .flatMap(movies-> Observable.fromIterable(movies)) // return movies one by one
+                (topMoviesResponse, popMoviesResponse2) ->
+                        allMovies(topMoviesResponse,popMoviesResponse2))
+                // return movies one by one
+                .flatMap(movies-> Observable.fromIterable(movies))
+                // For each Movie Observable get Trailer and Review
+                // and return a ImmutableTriple<> with those values
                 .flatMap(movie -> Observable.zip(api.getTrailer(movie.getId()),
                                 api.getReview(movie.getId()),
                                 Observable.just(movie),
-                                (trailers,reviews, movie1) -> new ImmutableTriple<>(trailers,reviews, movie1)))
+                                (trailers,reviews, movie1) ->
+                                        new ImmutableTriple<>(trailers,reviews, movie1)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ImmutableTriple<TrailersResponse,ReviewsResponse, Movie>>() {
@@ -97,6 +107,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                         }else{
                             review = "No reviews.";
                         }
+                        // ContentValues for storing our data.
                         ContentValues movieValues = new ContentValues();
                         movieValues.put(MovieContract.MoviesEntry.COLUMN_TITLE, movie.getTitle());
                         movieValues.put(MovieContract.MoviesEntry.COLUMN_YEAR, movie.getReleaseDate());
@@ -129,11 +140,16 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 });
     }
 
-
-
-    private List<Movie> allMovies(MoviesResponse moviesResponse, MoviesResponse moviesResponse2) {
-        List<Movie> topMovies = moviesResponse.getResults().subList(0,8);  // themoviedb.org allows
-        List<Movie> popMovies = moviesResponse2.getResults().subList(0,8); // 40 requests / 10 sec.
+    /**
+     * Helper method that cuts our list of movies and combines them.
+     * This is done because free API licence has limitations.
+     * @param topMoviesResponse is MoviesResponse object from our first API call.
+     * @param popMoviesResponse is MoviesResponse object from our second API call.
+     * @return a list of combined results.
+     */
+    private List<Movie> allMovies(MoviesResponse topMoviesResponse, MoviesResponse popMoviesResponse) {
+        List<Movie> topMovies = topMoviesResponse.getResults().subList(0,8);
+        List<Movie> popMovies = popMoviesResponse.getResults().subList(0,8);
         List<Movie> allMovies = new ArrayList<>();
         allMovies.addAll(topMovies);
         allMovies.addAll(popMovies);

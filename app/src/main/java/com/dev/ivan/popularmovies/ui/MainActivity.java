@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         recyclerView.setAdapter(mAdapter);
 
         MovieSyncAdapter.initializeSyncAdapter(this);
-
+        // Prepare the loader.  Either re-connect with an existing one,
+        // or start a new one.
         getSupportLoaderManager().initLoader(MOVIE_LOADER,bundleTop,this);
     }
 
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
         return false;
     }
-
+    // This is called when a new Loader needs to be created.
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -96,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         String sortOrder = args.getString("sort");
 
+        // Now create and return a CursorLoader that will take care of
+        // creating a Cursor for the data being displayed.
         return new CursorLoader(this,
                 MovieContract.CONTENT_URI,
                 projection,
@@ -104,14 +107,19 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 sortOrder);
 
     }
-
+    // This method is called when a previously created loader has finished its load.
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Swap the new cursor in.
         mAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        // This is called when the last Cursor provided to onLoadFinished()
+        // above is about to be closed.  We need to make sure we are no
+        // longer using it.
+        mAdapter.swapCursor(null);
 
     }
 

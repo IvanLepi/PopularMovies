@@ -6,6 +6,8 @@ import retrofit2.http.Path;
 
 /**
  * @author Ivan Lepojevic
+ *
+ * Methods for our network calls.
  */
 
 public interface MoviesAPI {
