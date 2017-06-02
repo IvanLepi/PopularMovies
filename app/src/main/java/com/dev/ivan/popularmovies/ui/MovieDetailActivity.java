@@ -42,9 +42,11 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         setContentView(R.layout.activity_movie_detail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Get the URI from Intent
         Intent intent = getIntent();
         mUri = intent.getData();
 
+        // Prepare the loader.
         getSupportLoaderManager().initLoader(DETAILS_LOADER,null,this);
 
         imageView = (ImageView) findViewById(R.id.movie_detail_image_view);
@@ -64,9 +66,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         }
         return true;
     }
-
+    // This is called when a new Loader needs to be created.
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
         String[] projection = {MovieContract.MoviesEntry.COLUMN_ID,
                 MovieContract.MoviesEntry.COLUMN_TITLE,
                 MovieContract.MoviesEntry.COLUMN_YEAR,
@@ -75,6 +78,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 MovieContract.MoviesEntry.COLUMN_POSTER_URL,
                 MovieContract.MoviesEntry.COLUMN_TRAILER,
                 MovieContract.MoviesEntry.COLUMN_REVIEW};
+        // Now create and return a CursorLoader that will take care of
+        // creating a Cursor for the data being displayed.
         return new CursorLoader(this,
                 mUri,
                 projection,
@@ -82,7 +87,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 null,
                 null);
     }
-
+    // This method is called when a previously created loader has finished its load.
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null && data.moveToFirst()){
