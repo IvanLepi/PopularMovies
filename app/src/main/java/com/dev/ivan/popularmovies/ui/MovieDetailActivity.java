@@ -28,18 +28,19 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     private static final int DETAILS_LOADER = 0;
     private Uri mUri;
 
-    ImageView imageView;
-    TextView titleView;
-    TextView dateView;
-    TextView scoreView;
-    TextView overView;
-    Button trailerButton;
-    Button reviewButton;
+    private ImageView imageView;
+    private TextView titleView;
+    private TextView dateView;
+    private TextView scoreView;
+    private TextView overView;
+    private Button trailerButton;
+    private Button reviewButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Get the URI from Intent

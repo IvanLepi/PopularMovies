@@ -27,9 +27,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private static final int MOVIE_LOADER = 0;
     private MovieAdapter mAdapter;
-    private Bundle bundleTop = new Bundle();
-    private Bundle bundlePop = new Bundle();
-    RecyclerView recyclerView;
+    private final Bundle bundleTop = new Bundle();
+    private final Bundle bundlePop = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         bundlePop.putString("sort",MovieContract.MoviesEntry.COLUMN_ID + " DESC limit 10");
 
         mAdapter = new MovieAdapter(this,null,this);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this,2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new FadeInUpAnimator());
