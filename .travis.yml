@@ -1,15 +1,14 @@
 language: android
+
+jdk:
+  - oraclejdk8
+  
 android:
     components:
-    # Update Android SDK Tools
     - tools
-
-    - build-tools-25.0.3
+    - platform-tools
     - android-25
-
-    # Support library
-    - extra-android-support
-    - extra-android-m2repository
+    - build-tools-25.0.3
 
 notifications:
   email: false
