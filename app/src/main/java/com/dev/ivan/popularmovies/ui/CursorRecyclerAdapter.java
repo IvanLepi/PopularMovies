@@ -28,14 +28,14 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.support.v7.widget.RecyclerView;
 
-public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> extends
+abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> extends
         RecyclerView.Adapter<VH>
 {
     private boolean mDataValid;
-    protected Cursor mCursor;
-    protected int mRowIDColumn;
+    Cursor mCursor;
+    private int mRowIDColumn;
 
-    public CursorRecyclerAdapter(Cursor c)
+    CursorRecyclerAdapter(Cursor c)
     {
         init(c);
     }
@@ -64,7 +64,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
         onBindViewHolder(holder, mCursor);
     }
 
-    public abstract void onBindViewHolder(VH holder, Cursor cursor);
+    protected abstract void onBindViewHolder(VH holder, Cursor cursor);
 
     public Cursor getCursor()
     {

@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * @author Ivan Lepojevic
  */
 
-public class MovieDbHelper extends SQLiteOpenHelper {
+class MovieDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
     private static final String DATABASE_NAME = "PopMovies.db";

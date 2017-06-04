@@ -45,7 +45,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final int SYNC_FLEXTIME = 3600;
     private static final String LOG_TAG = MovieSyncAdapter.class.getSimpleName();
 
-    private Vector<ContentValues> cVValues = new Vector<>(20);
+    private final Vector<ContentValues> cVValues = new Vector<>(20);
     private MoviesAPI api;
     private ArrayList<Movie> moviesList = new ArrayList<>();
 

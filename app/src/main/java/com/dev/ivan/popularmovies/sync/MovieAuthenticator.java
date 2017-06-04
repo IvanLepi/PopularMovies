@@ -11,7 +11,7 @@ import android.os.Bundle;
  * @author Ivan Lepojevic
  */
 
-public class MovieAuthenticator extends AbstractAccountAuthenticator {
+class MovieAuthenticator extends AbstractAccountAuthenticator {
 
     public MovieAuthenticator(Context context) {
         super(context);

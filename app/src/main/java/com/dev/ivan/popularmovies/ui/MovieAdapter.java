@@ -19,8 +19,7 @@ import com.squareup.picasso.Picasso;
 
 public class MovieAdapter extends CursorRecyclerAdapter<MovieAdapter.ImageViewHolder> {
 
-    private MovieItemClickListener mItemClickListener;
-    private Context mContext;
+    private final MovieItemClickListener mItemClickListener;
 
     public interface MovieItemClickListener {
         void onMovieItemClick(Uri uri);
@@ -28,13 +27,12 @@ public class MovieAdapter extends CursorRecyclerAdapter<MovieAdapter.ImageViewHo
 
     public MovieAdapter(Context context, Cursor cursor, MovieItemClickListener listener){
         super(cursor);
-        mContext = context;
         mItemClickListener = listener;
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView posterImageView;
+        private final ImageView posterImageView;
 
         public ImageViewHolder(View itemView) {
             super(itemView);

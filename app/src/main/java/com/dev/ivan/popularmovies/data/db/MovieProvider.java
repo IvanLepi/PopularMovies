@@ -58,6 +58,7 @@ public class MovieProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: "+ uri);
 
         }
+        //noinspection ConstantConditions
         retCursor.setNotificationUri(getContext().getContentResolver(),uri);
         return retCursor;
     }
@@ -97,6 +98,7 @@ public class MovieProvider extends ContentProvider {
         }finally {
             db.endTransaction();
         }
+        //noinspection ConstantConditions
         getContext().getContentResolver().notifyChange(uri,null);
         return returnCount;
 
