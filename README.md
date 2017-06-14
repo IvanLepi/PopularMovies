@@ -1,7 +1,7 @@
 # PopMovies
 ## Lightweight Movie App that allows users to discover top and popular movies playing.
 
-
+<img src="https://travis-ci.org/IvanLepi/PopularMovies.svg?branch=master"/>
 *Based on Udacity course assignment.*
 
 - Upon launch, present the user with an grid arrangement of movie posters.
