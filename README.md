@@ -27,6 +27,7 @@
 ### Libraries used:
 [RxJava2][1], [RxAndroid][3], [Retrofit2][2], [Retrolambda][4], [Picasso][5].
 
+### TODO: Convert to Kotlin.
 
 [1]: https://github.com/ReactiveX/RxJava
 [2]: https://github.com/square/retrofit	
